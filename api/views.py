@@ -10,7 +10,7 @@ from rest_framework import status
 from .serializers import UserSerializer
 from django.utils import timezone
 import requests as r
-from .authhelper import authenticate
+from .authhelper import authenticate as InternalAuthenticate, Credentialauth
 
 # API Endpoints
 mgauth = 'https://mgauthsphere.pythonanywhere.com/api/'
@@ -27,7 +27,7 @@ class Cloudapi(ModelViewSet):
     
 
     @action(detail=False, methods=['post'])
-    def login(self, request):
+    def checksession(self, request):
         try:
             sessionid = request.data['session_id']
         except KeyError:
@@ -37,7 +37,7 @@ class Cloudapi(ModelViewSet):
                 }, status=status.HTTP_400_BAD_REQUEST)
         
       
-        auth = authenticate(session_id=sessionid)
+        auth = InternalAuthenticate(session_id=sessionid)
         if auth:
             a=UserSerializer(auth)
             return Response({
@@ -101,4 +101,28 @@ class Cloudapi(ModelViewSet):
         else:
             return Response({"status": "failed", "data": 'Operation failed'})
         
+    @action(detail=False, methods=['post'])
+    def authenticate(self, request):
+        try:
+            _email = request.data['email']
+            _password = request.data['password']
+        except KeyError:
+            return Response({
+                "status": "failed",
+                "detail": "insufficient parameters, required email and password"
+                }, status=status.HTTP_400_BAD_REQUEST)
+        payload = {
+            'email': _email,
+            'password': _password
+        }
         
+        response = r.post(mgauth + 'authenticate/',
+               headers={
+                'Authorization': 'Token ' + TOKEN 
+                },
+                data=payload)
+        response = response.json()
+        if response['status'] == 'success':
+            return Response(response)
+        else:
+            return Response({'status': 'failed', 'detail': 'Authentication failed, there is not such user'})

@@ -12,3 +12,13 @@ def authenticate(session_id):
                 return False
         except ObjectDoesNotExist:
             return False
+        
+def Credentialauth(_email, _password):
+    try:
+        user = Users.objects.get(email=_email)
+        if user.check_password(_password):
+            return user
+        else:
+            return None
+    except ObjectDoesNotExist:
+        return None
