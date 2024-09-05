@@ -4,13 +4,14 @@ from .models import Users
 from django.utils import timezone
 
 def authenticate(session_id):
-        try:
+        try:            
             user = Users.objects.get(session_id=session_id)
-            if user.expiration <= timezone.now():
+            if user.expiration >= timezone.now():
                 return user
             else:
                 return False
         except ObjectDoesNotExist:
+            print("oops")
             return False
         
 def Credentialauth(_email, _password):

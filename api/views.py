@@ -13,8 +13,9 @@ import requests as r
 from .authhelper import authenticate as InternalAuthenticate, Credentialauth
 
 # API Endpoints
-mgauth = 'https://mgauthsphere.pythonanywhere.com/api/'
-TOKEN = '4ef2662150db3265354c604958e3df87f4defe90'
+# mgauth = 'https://mgauthsphere.pythonanywhere.com/api/'
+mgauth = 'http://127.0.0.1:7000/api/'
+TOKEN = 'a3e2935779c2f87c61ab3f54fc953944e94ebf27'#'5fcec46340e08e0a9d1c0a36594bef36bbe300e4'#'4ef2662150db3265354c604958e3df87f4defe90'
 APP_PASSWORD = 'iZW1ddCywQCMXp5dEMEy8BkCRKURcUsJ'
 
 class Cloudapi(ModelViewSet):
@@ -121,8 +122,16 @@ class Cloudapi(ModelViewSet):
                 'Authorization': 'Token ' + TOKEN 
                 },
                 data=payload)
+        
         response = response.json()
         if response['status'] == 'success':
+            user, created = self.queryset.get_or_create(mail=_email)
+            user.session_id = response['session_id']
+            user.expiration = response['session_expiry']
+            user.save()
             return Response(response)
         else:
-            return Response({'status': 'failed', 'detail': 'Authentication failed, there is not such user'})
+            return Response({'status': 'failed', 'detail': 'Authentication failed, there is no such user'})
+        
+    def get_view_name(self):
+        return "MGCloud V2"

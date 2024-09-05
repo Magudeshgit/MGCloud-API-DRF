@@ -6,6 +6,7 @@ class Users(models.Model):
     mail = models.EmailField()
     firstname = models.CharField(max_length=50, blank=True)
     lastname = models.CharField(max_length=50, blank=True)
+    user_id = models.CharField(max_length=50, null=True)
     session_id = models.CharField(max_length=50,)
     expiration = models.DateTimeField()
     
@@ -20,4 +21,3 @@ class Users(models.Model):
 # "email": "magudesh2006@gmail.com",
 # "signed_services": [],
 # "session_id": "yn9wuqlrltbxiyvaeg2qwxant5hg25sg"
-

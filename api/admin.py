@@ -4,5 +4,5 @@ from rest_framework.authtoken.models import Token
 from .models import Users
 # Register your models here.
 
-admin.site.unregister([Group])
-admin.site.register([Users,])
+admin.site.unregister([Group, User])
+admin.site.register([Users])
