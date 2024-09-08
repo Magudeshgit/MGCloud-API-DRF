@@ -6,8 +6,8 @@ from rest_framework.decorators import action
 
 
 from api.models import Users
-from .models import FileLog
-from .serializer import FileSerializer
+from .models import FileLog, DirectoryLog
+from .serializer import FileSerializer, DirectorySerializer
 
 
 
@@ -17,13 +17,7 @@ class FileOps(ModelViewSet):
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = FileSerializer
-    
-    # def list(self, request, *args, **kwargs):
-    #     user = Users.objects.get(user_id = request.data.get('userid'))
-    #     response = self.queryset.filter(owner=user)
-    #     print(response)
-    #     response = FileSerializer(response, many=True)  
-    #     return Response(response)
+    dir_serializer_class = DeprecationWarning
     
     @action(detail=False, methods=['post'])
     def userfiles(self, request):
@@ -33,6 +27,13 @@ class FileOps(ModelViewSet):
         response = FileSerializer(response, many=True).data
         return Response(response)
         
+    @action(detail=False, methods=['post'])
+    def userdirectories(self, request):
+        user = Users.objects.get(user_id = request.data.get('userid'))
+        directories = DirectoryLog.objects.filter(owner=user)
+        
+        response = DirectorySerializer(directories, many=True).data
+        return Response(response)
     
     def get_view_name(self):
         return "File Operations"

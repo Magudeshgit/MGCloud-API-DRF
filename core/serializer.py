@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from api.models import Users
-from .models import FileLog
+from .models import FileLog, DirectoryLog
 
 class SharedWithUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,4 +12,10 @@ class FileSerializer(serializers.ModelSerializer):
     owner = SharedWithUserSerializer()
     class Meta:
         model = FileLog
+        fields = '__all__'
+        
+class DirectorySerializer(serializers.ModelSerializer):
+    owner = SharedWithUserSerializer()
+    class Meta:
+        model = DirectoryLog
         fields = '__all__'
