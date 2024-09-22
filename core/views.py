@@ -9,10 +9,11 @@ from api.models import Users
 from .models import FileLog, DirectoryLog
 from .serializer import FileSerializer, DirectorySerializer
 
+from .helper import *
+
 
 
 class FileOps(ModelViewSet):
-    # Defaults
     queryset = FileLog.objects.all()
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -35,6 +36,17 @@ class FileOps(ModelViewSet):
         response = DirectorySerializer(directories, many=True).data
         return Response(response)
     
+    @action(detail=False, methods=['post'])
+    def generatepresignedurl(self, request):
+        files = request.data.get('files')
+        if not files:
+            return Response({"status":"failed", "detail": "insufficient parameters, please provide file names"})
+        urlpack = {}
+        for filename in files:
+            urlpack[filename] = UploadPresignedUrl(filename)
+        return Response(urlpack)
+    
+   
+    
     def get_view_name(self):
         return "File Operations"
-    
