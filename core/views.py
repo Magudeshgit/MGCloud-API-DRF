@@ -10,16 +10,9 @@ from .models import FileLog, DirectoryLog
 from .serializer import FileSerializer, DirectorySerializer
 
 from .helper import *
+from .sourceview import FileAbstract
 
-
-
-class FileOps(ModelViewSet):
-    queryset = FileLog.objects.all()
-    authentication_classes = [TokenAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticated]
-    serializer_class = FileSerializer
-    dir_serializer_class = DeprecationWarning
-    
+class FileOps(FileAbstract):
     @action(detail=False, methods=['post'])
     def userfiles(self, request):
         user = Users.objects.get(user_id = request.data.get('userid'))
@@ -46,7 +39,19 @@ class FileOps(ModelViewSet):
             urlpack[filename] = UploadPresignedUrl(filename)
         return Response(urlpack)
     
-   
-    
-    def get_view_name(self):
-        return "File Operations"
+    @action(detail=False, methods=['post'])
+    def adduserfiles(self, request):
+        userfiles = request.data.get('files')
+        print(request.data.get('userid'))
+        user = Users.objects.get(user_id = request.data.get('userid'))
+        print(user)
+        data_array=[]
+        for file in userfiles:
+            data_array.append(FileLog(filename=file.filename, 
+                                      filesize=file.filesize, 
+                                      filetype="example", 
+                                      relativepath="",
+                                      owner=user
+                                      ))
+        self.queryset.bulk_create(data_array)
+        return Response("Files Saved")
