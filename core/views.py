@@ -17,7 +17,6 @@ class FileOps(FileAbstract):
     def userfiles(self, request):
         user = Users.objects.get(user_id = request.data.get('userid'))
         response = self.queryset.filter(owner=user)
-        print(response)
         response = FileSerializer(response, many=True).data
         return Response(response)
         
@@ -42,16 +41,16 @@ class FileOps(FileAbstract):
     @action(detail=False, methods=['post'])
     def adduserfiles(self, request):
         userfiles = request.data.get('files')
-        print(request.data.get('userid'))
         user = Users.objects.get(user_id = request.data.get('userid'))
-        print(user)
         data_array=[]
         for file in userfiles:
-            data_array.append(FileLog(filename=file.filename, 
-                                      filesize=file.filesize, 
-                                      filetype="example", 
-                                      relativepath="",
-                                      owner=user
-                                      ))
+            fileinst = FileLog(filename=file['filename'], 
+                                filesize=file['filesize'], 
+                                filetype="example", 
+                                relativepath="",
+                                owner=user
+                                )
+            data_array.append(fileinst)
         self.queryset.bulk_create(data_array)
-        return Response("Files Saved")
+        
+        return Response({"status":"success", "detail": "Data saved"})
