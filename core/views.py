@@ -16,7 +16,7 @@ class FileOps(FileAbstract):
     @action(detail=False, methods=['post'])
     def userfiles(self, request):
         user = Users.objects.get(user_id = request.data.get('userid'))
-        response = self.queryset.filter(owner=user)
+        response = self.queryset.filter(owner=user).order_by('-date_created')
         response = FileSerializer(response, many=True).data
         return Response(response)
         
@@ -41,6 +41,7 @@ class FileOps(FileAbstract):
     @action(detail=False, methods=['post'])
     def adduserfiles(self, request):
         userfiles = request.data.get('files')
+        print(request.data.get('userid'), request.data.get('files'))
         user = Users.objects.get(user_id = request.data.get('userid'))
         data_array=[]
         for file in userfiles:
