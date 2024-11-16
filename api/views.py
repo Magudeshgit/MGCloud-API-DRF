@@ -14,6 +14,7 @@ from .authhelper import authenticate as InternalAuthenticate, Credentialauth
 
 # API Endpoints
 # mgauth = 'https://mgauthsphere.pythonanywhere.com/api/'
+#mgauth = 'http://127.0.0.1:7000/api/'
 mgauth = 'http://127.0.0.1:7000/api/'
 TOKEN = 'a3e2935779c2f87c61ab3f54fc953944e94ebf27'#'5fcec46340e08e0a9d1c0a36594bef36bbe300e4'#'4ef2662150db3265354c604958e3df87f4defe90'
 APP_PASSWORD = 'iZW1ddCywQCMXp5dEMEy8BkCRKURcUsJ'

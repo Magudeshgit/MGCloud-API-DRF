@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mgcloud-api
+spec: 
+  selector:
+    matchLabels: 
+      app: mgcloud-api
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: mgcloud-api
+    spec:
+      containers:
+      - name: mgcloud-api
+        image: mgcloud-api
+        imagePullPolicy: Never
+        ports: 
+        - containerPort: 8000

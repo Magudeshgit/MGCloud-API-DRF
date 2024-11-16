@@ -25,3 +25,14 @@ def UploadPresignedUrl(filename):
                                         }, 
                                        ExpiresIn=3600)
     return url
+
+def getFileURLForPreview(filename):
+    url = s3_client.generate_presigned_url('get_object',
+                                           Params=
+                                           {
+                                               "Bucket": "mgcloud",
+                                               "Key": filename
+                                           },
+                                           ExpiresIn=3600
+                                           )
+    return url
