@@ -62,6 +62,12 @@ class FileOps(FileAbstract):
         return Response({"status": "success", "url":presignedurl})
     
     @action(detail=False, methods=['post'])
+    def getfiledownloadurl(self, request):
+        filename = request.data.get("filename")
+        presignedurl = getFileURLForDownload(filename)
+        return Response({"status": "success", "url":presignedurl})
+    
+    @action(detail=False, methods=['post'])
     def modifyfilefavourite(self, request):
         
         fileid = request.data.get("fileid")
@@ -85,5 +91,3 @@ class FileOps(FileAbstract):
                                 "isFavourite": operationtype
                              }
                              ]})
-        
-        
