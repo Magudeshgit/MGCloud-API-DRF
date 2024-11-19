@@ -91,3 +91,21 @@ class FileOps(FileAbstract):
                                 "isFavourite": operationtype
                              }
                              ]})
+        
+    @action(detail=False, methods=['post'])
+    def deleteobject(self, request):
+        fileid = request.data.get("fileid")
+        userid = request.data.get("userid")
+        print(fileid, userid)
+        try:
+            file = FileLog.objects.get(id=fileid)
+            if file.owner == Users.objects.get(user_id=userid):
+                deleteObject(file.filename)
+                file.delete()   
+                return Response({"success":True})
+        except Exception as e:
+            print("error", e)
+            pass
+        return Response({"success":False})
+        
+        

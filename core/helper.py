@@ -48,3 +48,11 @@ def getFileURLForDownload(filename):
                                            },
                                            )
     return url
+
+
+def deleteObject(filename):
+    request = s3_client.delete_object(
+    Bucket="mgcloud",
+    Key= filename)
+
+    return request
