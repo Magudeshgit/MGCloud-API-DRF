@@ -133,6 +133,17 @@ class Cloudapi(ModelViewSet):
             return Response(response)
         else:
             return Response({'status': 'failed', 'detail': 'Authentication failed, there is no such user'})
-        
+    
+    # @action(detail=False, methods=['post'])
+    # def getsymkey(self, request):
+    #     response = r.post(mgauth + 'getsymmetrickey/',
+    #            headers={
+    #             'Authorization': 'Token ' + TOKEN 
+    #             },
+    #             data={
+    #                 "app_key": APP_PASSWORD
+    #             })
+    #     return Response(response.json())
+    
     def get_view_name(self):
         return "MGCloud V2"
